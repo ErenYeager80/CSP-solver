@@ -16,18 +16,32 @@ from MagicHexagon.MagicHexagonConstraint import MagicHexagonConstraint
 #
 # c1 = MyConstraint([a, b])
 # print(c1.is_satisfied())
-n = 3
-domain = list(range(1, 3 * n * (n - 1)))
-a = Variable("a", domain)
-b = Variable("b", domain)
-c = Variable("c", domain)
-print(a, b, c)
+from SecretSanta.SecretSantaProblem import SecretSantaProblem, Participant
+from Solver.BaseSolver import BaseSolver
+from Sudoku.SudokuProblem import SudokuProblem
 
-variables = [a, b, c]
-constraint = MagicHexagonConstraint(variables, 38)
-print(constraint.is_satisfied())
-a.value = 10
-b.value = 12
-c.value = 16
+# Example usage
+participants = [Participant("Alice"), Participant("Bob"), Participant("Charlie"), Participant("David")]
+problem = SecretSantaProblem(participants)
+problem.assign_givers_and_receivers()
+problem.print_assignments()
 
-print(constraint.is_satisfied())
+grid = [
+    [0, 0, 3, 0, 2, 0, 6, 0, 0],
+    [9, 0, 0, 3, 0, 5, 0, 0, 1],
+    [0, 0, 1, 8, 0, 6, 4, 0, 0],
+    [0, 0, 8, 1, 0, 2, 9, 0, 0],
+    [7, 0, 0, 0, 0, 0, 0, 0, 8],
+    [0, 0, 6, 7, 0, 8, 2, 0, 0],
+    [0, 0, 2, 6, 0, 9, 5, 0, 0],
+    [8, 0, 0, 2, 0, 3, 0, 0, 9],
+    [0, 0, 5, 0, 1, 0, 3, 0, 0]
+]
+
+problem = SudokuProblem(grid)
+
+solver = BaseSolver(use_ac3=False, use_forward_checking=False, use_mrv=False, use_lcv=False)
+
+solver.solve(problem)
+
+print(problem)

@@ -17,7 +17,6 @@ class MagicHexagonProblem:
         return variables
 
     def get_constraints(self, n: int) -> List[Constraint]:
-        constraints = []
         magic_sum = n * (3 * n * n + 3 * n + 1) // 2
         for i in range(1, n + 1):
             # Row constraints
