@@ -5,6 +5,7 @@ from Sudoku.SudokuConstraint import SudokuConstraint
 
 class SudokuProblem(Problem):
     def __init__(self, grid):
+        super().__init__([], [])
         variables = []
         rows = "ABCDEFGHI"
         cols = "123456789"
@@ -16,9 +17,9 @@ class SudokuProblem(Problem):
                 name = r + c
                 value = int(grid[rows.index(r)][cols.index(c)])
                 if value == 0:
-                    variable = Variable(name, list(domains))
+                    variable = Variable(list(domains), name)
                 else:
-                    variable = Variable(name, [value])
+                    variable = Variable([value], name)
                 variables.append(variable)
 
         # Create constraints
@@ -44,4 +45,3 @@ class SudokuProblem(Problem):
 
         self.constraints = constraints
         self.variables = variables
-        #super().__init__(constraints, variables)

@@ -8,7 +8,7 @@ from SecretSanta.SecretSantaConstraint import NotEqualConstraint
 
 class SecretSantaProblem(Problem):
     def __init__(self, participants: List[str]):
-        super().__init__([], [])
+        super().__init__([], [], f"Secret Santa With {len(participants)} Participants")
 
         self.participants = participants
         for participant in participants:
