@@ -3,10 +3,10 @@ Base solver class that implements the solve method and solves the problem using 
 MRV, and LCV, and AC3 algorithms.
 """
 from CSP.Problem import Problem
-from CSP.Solver import CPSSolver
+from CSP.Solver import Solver
 
 
-class BaseSolver(CPSSolver):
+class BaseSolver(Solver):
     def __init__(self, use_forward_checking: bool = True, use_mrv: bool = True,
                  use_lcv: bool = True, use_ac3: bool = True):
         self.use_forward_checking = use_forward_checking

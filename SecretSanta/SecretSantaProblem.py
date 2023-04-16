@@ -1,4 +1,5 @@
 import random
+from typing import List
 
 from CSP.Problem import Problem
 from CSP.Variable import Variable
@@ -6,30 +7,27 @@ from SecretSanta.SecretSantaConstraint import NotEqualConstraint
 
 
 class SecretSantaProblem(Problem):
-    def __init__(self, participants):
-        super().__init__([], participants)
+    def __init__(self, participants: List[str]):
+        super().__init__([], [])
+
         self.participants = participants
-        self.constraints = [NotEqualConstraint(p1, p2) for p1 in participants for p2 in participants if p1 != p2]
+        for participant in participants:
+            domain = [p for p in self.participants if p != participant]
+            variable = Variable(domain, participant)
+            self.variables.append(variable)
+
+        self.constraints = [NotEqualConstraint(p1, p2) for p1 in self.variables for p2 in self.variables if p1.name != p2.name]
 
     def assign_givers_and_receivers(self):
         # Shuffle participants to avoid deterministic solutions
         random.shuffle(self.participants)
 
         # Assign givers and receivers
-        for i in range(len(self.participants)):
-            self.participants[i].value = i
-            self.participants[i].receiver = self.participants[(i+1) % len(self.participants)]
+        for i in range(len(self.variables)):
+            self.variables[i].value = self.variables[(i+1) % len(self.variables)].name
 
     def print_assignments(self):
-        for participant in self.participants:
-            print(f"{participant.name} will give a gift to {participant.receiver.name}")
+        for participant in self.variables:
+            print(f"{participant.name} will give a gift to {participant.value}")
 
 
-class Participant(Variable):
-    def __init__(self, name):
-        super().__init__(name, [])
-        self.name = name
-        self.receiver = None
-
-    def __str__(self):
-        return f"{self.name} ({self.value})"

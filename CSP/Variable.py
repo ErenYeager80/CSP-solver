@@ -7,7 +7,7 @@ class Variable(Generic[T]):
     _value: T = None
     _has_value: bool = False
 
-    def __init__(self, domain: List[T],name:str=None):
+    def __init__(self, domain: List[T], name: str = None):
         self._domain = domain
         self.name = name
 
@@ -21,6 +21,8 @@ class Variable(Generic[T]):
             self._value = x
             # self._domain.remove(x)
             self._has_value = True
+        else:
+            raise Exception("Value is not in the domain")
         if x is None:
             self._has_value = False
 
@@ -31,5 +33,3 @@ class Variable(Generic[T]):
     @property
     def has_value(self) -> bool:
         return self._has_value
-
-
