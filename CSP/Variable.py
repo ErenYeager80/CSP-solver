@@ -22,6 +22,7 @@ class Variable(Generic[T]):
             # self._domain.remove(x)
             self._has_value = True
         elif x is None:
+            # self._domain.append(self.value)
             self._has_value = False
         else:
             raise Exception("Value is not in the domain")

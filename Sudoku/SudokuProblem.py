@@ -45,3 +45,12 @@ class SudokuProblem(Problem):
 
         self.constraints = constraints
         self.variables = variables
+
+    def count_conflicts(self, var: Variable, val) -> int:
+        list_of_constraints = [x for x in self.constraints if var in x.variables]
+        conflicts=0
+        for constraint in list_of_constraints:
+            for _var in constraint.variables:
+                if _var is not var and str(val) in _var.domain:
+                    conflicts +=1
+        return  conflicts

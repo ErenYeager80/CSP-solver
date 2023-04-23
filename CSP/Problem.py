@@ -1,8 +1,10 @@
+from abc import ABC, abstractmethod
+
 from CSP.Constraint import Constraint
 from CSP.Variable import Variable
 
 
-class Problem:
+class Problem(ABC):
 
     def __init__(self, constraints: list[Constraint], variables: list[Variable], name=""):
         self.constraints = constraints
@@ -15,3 +17,8 @@ class Problem:
     def print_assignments(self):
         for variable in self.variables:
             print(f"{variable.name} is set to {variable.value}")
+
+    @abstractmethod
+    def count_conflicts(self,var,val) -> int:
+        return 1
+

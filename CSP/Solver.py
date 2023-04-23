@@ -40,7 +40,7 @@ class Solver:
             return self.mrv()
         return self.problem.get_unassigned_variables()[0] if self.problem.get_unassigned_variables() else None
 
-    def order_domain_values(self, var):
+    def order_domain_values(self, var: Variable):
         if self.use_lcv:
             return self.lcv(var)
         return var.domain
@@ -57,3 +57,6 @@ class Solver:
     def is_consistent(self, var):
         list_of_values = [x.is_satisfied() for x in self.problem.constraints if var in x.variables]
         return all(list_of_values)
+
+    def lcv(self, var: Variable):
+        return list(sorted(var.domain, key=lambda x:self.problem.count_conflicts(var,x)))
