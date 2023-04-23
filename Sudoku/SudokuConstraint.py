@@ -8,5 +8,5 @@ class SudokuConstraint(Constraint):
         super().__init__(variables)
 
     def is_satisfied(self):
-        values = [var.value for var in self.variables]
+        values = [var.value for var in self.variables if var.value]
         return len(set(values)) == len(values)
