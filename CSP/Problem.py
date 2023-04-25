@@ -1,4 +1,5 @@
 from abc import ABC, abstractmethod
+from typing import List
 
 from CSP.Constraint import Constraint
 from CSP.Variable import Variable
@@ -21,4 +22,7 @@ class Problem(ABC):
     @abstractmethod
     def count_conflicts(self,var,val) -> int:
         return 1
+
+    def get_neighbor_constraints(self,variable: Variable) -> List[Constraint]:
+        return [constraint for constraint in self.constraints if variable in constraint.variables]
 

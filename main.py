@@ -58,7 +58,7 @@ grid2 = [
     [0, 0, 5,   0, 1, 0,    3, 0, 0]
 ]
 
-sudoku = SudokuProblem(grid)
+sudoku = SudokuProblem(grid2)
 s = Solver(sudoku)
 s.solve()
 sudoku.print_assignments()

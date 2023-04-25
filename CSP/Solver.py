@@ -1,3 +1,4 @@
+from collections import deque
 from typing import Optional
 
 from CSP.Problem import Problem
@@ -31,7 +32,7 @@ class Solver:
         for value in self.order_domain_values(var):
 
             var.value = value
-            if self.is_consistent(var):
+            if self.is_consistent(var) and self.ac3(var):
                 result = self.backtracking()
                 if result:
                     return True
@@ -66,3 +67,30 @@ class Solver:
 
     def lcv(self, var: Variable):
         return sorted(var.domain, key=lambda val: self.problem.count_conflicts(var, val))
+
+    def ac3(self,var:Variable):
+        queue = deque(self.problem.constraints)
+
+        while queue:
+            constraint = queue.popleft()
+            for variable in constraint.variables:
+                revised = False
+                if var is not variable:
+                    for value in variable.domain:
+                        cached=variable.value
+                        variable.value=value
+                        if not any([constraint.is_satisfied() for constraint in self.problem.constraints]):
+                            # variable.domain.remove(value)
+                            revised = True
+                        else:
+                            if cached:
+                                variable.domain.append(cached)
+                            variable.value=cached
+                    if revised:
+                        if not variable.domain:
+                            return False
+                        for neighbor_constraint in self.problem.get_neighbor_constraints(variable):
+                            if neighbor_constraint != constraint:
+                                queue.append(neighbor_constraint)
+
+            return True
