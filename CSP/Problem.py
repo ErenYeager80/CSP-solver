@@ -12,6 +12,14 @@ class Problem(ABC):
         self.variables = variables
         self.name = name
 
+    def calculate_neighbors(self):
+        for variable in self.variables:
+            for constraint in self.constraints:
+                if variable in constraint.variables:
+                    for other_var in constraint.variables:
+                        if other_var is not variable:
+                            variable.neighbors.add(other_var)
+
     def get_unassigned_variables(self) -> list[Variable]:
         return [x for x in self.variables if not x.has_value]
 

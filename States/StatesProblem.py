@@ -28,3 +28,4 @@ class StatesProblem(Problem):
         self.variables = [wa, nt, sa, q, nsw, v, t]
 
 
+

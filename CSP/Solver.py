@@ -19,6 +19,7 @@ class Solver:
             self.problem.get_unassigned_variables()) == 0
 
     def solve(self):
+        self.problem.calculate_neighbors()
         start = time.time()
         result = self.backtracking()
         end = time.time()
@@ -60,22 +61,19 @@ class Solver:
         unassigned_variables = self.problem.get_unassigned_variables()
         if not unassigned_variables:
             return None
-
         min_var = min(unassigned_variables, key=lambda var: len(var.domain))
         return min_var
 
     def forward_check(self, var):
-        constraints_involved = [x for x in self.problem.constraints if var in x.variables]
-        for constraint in constraints_involved:
-            for other_var in constraint.variables:
-                if other_var is not var and not other_var.has_value:
-                    for other_var_candidate in other_var.domain:
-                        other_var.value = other_var_candidate
-                        if not self.is_consistent(other_var):
-                            other_var.domain.remove(other_var_candidate)
-                            if len(other_var.domain) == 0:
-                                return False
-                        other_var.value = None
+        for neighbor in var.neighbors:
+            if not neighbor.has_value:
+                for other_var_candidate in neighbor.domain:
+                    neighbor.value = other_var_candidate
+                    if not self.is_consistent(neighbor):
+                        neighbor.domain.remove(other_var_candidate)
+                        if len(neighbor.domain) == 0:
+                            return False
+                    neighbor.value = None
 
         return True
 
@@ -92,26 +90,19 @@ class Solver:
     """
 
     def lcv(self, var: Variable):
-        domain_len = len(var.domain)
-        if var.has_value:
-            raise Exception("Variable should be unassigned for LCV")
         sorted_domain = sorted(var.domain, key=lambda val: self.count_conflicts(var, val))
-        if len(sorted_domain) != domain_len:
-            raise Exception("Domain member is missing")
         return sorted_domain
 
     def count_conflicts(self, var, val):
-        constraints_involved = [x for x in self.problem.constraints if var in x.variables]
         conflicts = 0
         var.value = val
-        for constraint in constraints_involved:
-            for other_var in constraint.variables:
-                if other_var is not var and not other_var.has_value:
-                    for other_var_candidate in other_var.domain:
-                        other_var.value = other_var_candidate
-                        if not self.is_consistent(var):
-                            conflicts += 1
-                        other_var.value = None
+        for neighbor in var.neighbors:
+            if not neighbor.has_value:
+                for other_var_candidate in neighbor.domain:
+                    neighbor.value = other_var_candidate
+                    if not self.is_consistent(var):
+                        conflicts += 1
+                    neighbor.value = None
 
         var.value = None
         return conflicts

@@ -46,3 +46,4 @@ class SudokuProblem(Problem):
         self.constraints = constraints
         self.variables = variables
 
+

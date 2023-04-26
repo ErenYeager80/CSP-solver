@@ -10,6 +10,7 @@ class Variable(Generic[T]):
     def __init__(self, domain: List[T], name: str = None):
         self._domain = domain
         self.name = name
+        self.neighbors = set({})
 
     @property
     def value(self) -> T:
