@@ -19,10 +19,5 @@ class Problem(ABC):
         for variable in self.variables:
             print(f"{variable.name} is set to {variable.value}")
 
-    @abstractmethod
-    def count_conflicts(self,var,val) -> int:
-        return 1
-
-    def get_neighbor_constraints(self,variable: Variable) -> List[Constraint]:
+    def get_neighbor_constraints(self, variable: Variable) -> List[Constraint]:
         return [constraint for constraint in self.constraints if variable in constraint.variables]
-

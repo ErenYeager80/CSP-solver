@@ -17,17 +17,18 @@ class Variable(Generic[T]):
 
     @value.setter
     def value(self, x: T):
-        if x in self._domain :
+        if x == self._value:
+            return
+        if x in self._domain and x is not None:
             self._value = x
             self._domain.remove(x)
             self._has_value = True
         elif x is None:
             self._domain.append(self.value)
             self._has_value = False
-            self._value=x
+            self._value = x
         else:
             raise Exception("Value is not in the domain")
-
 
     @property
     def domain(self) -> List[T]:

@@ -7,6 +7,7 @@ from States.StatesConstraint import StatesNotSameConstraint
 
 
 class StatesProblem(Problem):
+
     def __init__(self):
         super().__init__([], [], "States Problem")
 
