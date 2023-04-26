@@ -8,11 +8,11 @@ from CSP.Solver import Solver
 
 class BaseSolver(Solver):
     def __init__(self, use_forward_checking: bool = True, use_mrv: bool = True,
-                 use_lcv: bool = True, use_ac3: bool = True):
+                 use_lcv: bool = True, use_forward_check: bool = True):
         self.use_forward_checking = use_forward_checking
         self.use_mrv = use_mrv
         self.use_lcv = use_lcv
-        self.use_ac3 = use_ac3
+        self.use_ac3 = use_forward_check
 
     def solve(self, problem: Problem):
         if self.use_ac3:

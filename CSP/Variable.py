@@ -21,10 +21,10 @@ class Variable(Generic[T]):
             return
         if x in self._domain and x is not None:
             self._value = x
-            self._domain.remove(x)
+            # self._domain.remove(x)
             self._has_value = True
         elif x is None:
-            self._domain.append(self.value)
+            # self._domain.append(self.value)
             self._has_value = False
             self._value = x
         else:

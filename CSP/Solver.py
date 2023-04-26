@@ -1,3 +1,4 @@
+import time
 from collections import deque
 from typing import Optional
 
@@ -7,22 +8,25 @@ from CSP.Variable import Variable
 
 class Solver:
 
-    def __init__(self, problem: Problem, use_mrv=False, use_lcv=False, use_ac3=False):
+    def __init__(self, problem: Problem, use_mrv=False, use_lcv=False, use_forward_check=False):
         self.problem = problem
         self.use_lcv = use_lcv
         self.use_mrv = use_mrv
-        self.use_ac3 = use_ac3
+        self.use_forward_check = use_forward_check
 
     def is_finished(self) -> bool:
         return all([x.is_satisfied() for x in self.problem.constraints]) and len(
             self.problem.get_unassigned_variables()) == 0
 
     def solve(self):
+        start = time.time()
         result = self.backtracking()
+        end = time.time()
+        time_elapsed = (end - start) * 1000
         if result:
-            print('Solved')
+            print(f'Solved after {time_elapsed} ms')
         else:
-            print('Not solved')
+            print(f'Failed to solve after {time_elapsed} ms')
 
     def backtracking(self):
         if len(self.problem.get_unassigned_variables()) == 0:
@@ -32,10 +36,10 @@ class Solver:
         for value in self.order_domain_values(var):
             var.value = value
             if self.is_consistent(var):
-                # if self.forward_check():
-                result = self.backtracking()
-                if result:
-                    return True
+                if not self.use_forward_check or self.forward_check(var):
+                    result = self.backtracking()
+                    if result:
+                        return True
 
             var.value = None
 
@@ -64,16 +68,15 @@ class Solver:
         constraints_involved = [x for x in self.problem.constraints if var in x.variables]
         for constraint in constraints_involved:
             for other_var in constraint.variables:
-                if other_var is not var:
+                if other_var is not var and not other_var.has_value:
                     for other_var_candidate in other_var.domain:
                         other_var.value = other_var_candidate
                         if not self.is_consistent(other_var):
                             other_var.domain.remove(other_var_candidate)
-                            if len(other_var.domain) <= 0:
+                            if len(other_var.domain) == 0:
                                 return False
                         other_var.value = None
 
-        var.value = None
         return True
 
     def is_consistent(self, var: Variable):
