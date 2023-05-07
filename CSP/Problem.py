@@ -12,6 +12,12 @@ class Problem(ABC):
         self.variables = variables
         self.name = name
 
+    def get_variable_by_name(self, name):
+        for variable in self.variables:
+            if variable.name == name:
+                return variable
+        return None
+
     def calculate_neighbors(self):
         for variable in self.variables:
             for constraint in self.constraints:

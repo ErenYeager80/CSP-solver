@@ -1,6 +1,9 @@
 from CSP.Problem import Problem
 from CSP.Variable import Variable
 from Sudoku.SudokuConstraint import SudokuConstraint
+import os
+os.system("") # needed for ANSI escape characters to work on Windows
+from IPython.display import clear_output
 
 
 class SudokuProblem(Problem):
@@ -19,7 +22,7 @@ class SudokuProblem(Problem):
                 if value == 0:
                     variable = Variable(list(domains), name)
                 else:
-                    variable = Variable([value], name)
+                    variable = Variable([str(value)], name, str(value))
                 variables.append(variable)
 
         # Create constraints
@@ -45,5 +48,32 @@ class SudokuProblem(Problem):
 
         self.constraints = constraints
         self.variables = variables
+
+
+
+    def print_assignments(self, current_var=None):
+        rows = "ABCDEFGHI"
+        cols = "123456789"
+        separator = "+-------+-------+-------+"
+
+        for i in range(9):
+            if i % 3 == 0:
+                print(separator)
+            row_str = ""
+            for j in range(9):
+                if j % 3 == 0:
+                    row_str += "| "
+                variable = self.get_variable_by_name(rows[i] + cols[j])
+                value = variable.value if variable.has_value else " "
+                if variable.has_initial_value:
+                    row_str += "\033[1m{}\033[0m ".format(value)  # Set bold
+                elif current_var is not None and current_var.name == variable.name:
+                    row_str += "\033[42m{}\033[0m ".format(value)  # Set green background
+                else:
+                    row_str += "{} ".format(value)
+            row_str += "|"
+            print(row_str)
+        print(separator)
+
 
 

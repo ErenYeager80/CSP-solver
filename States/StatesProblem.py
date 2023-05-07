@@ -20,12 +20,18 @@ class StatesProblem(Problem):
         t = Variable[str](['R', 'G', 'B'], 'T')
 
         c1 = StatesNotSameConstraint([wa, nt])
-        c2 = StatesNotSameConstraint([wa, sa, nt])
-        c3 = StatesNotSameConstraint([sa, nt, q])
-        c4 = StatesNotSameConstraint([v, nsw, sa])
+        c2 = StatesNotSameConstraint([wa, sa])
 
-        self.constraints = [c1, c2, c3, c4]
+        c3 = StatesNotSameConstraint([nt, q])
+        c4 = StatesNotSameConstraint([nt, sa])
+
+        c5 = StatesNotSameConstraint([sa, q])
+        c6 = StatesNotSameConstraint([sa, nsw])
+        c7 = StatesNotSameConstraint([sa, v])
+
+        c8 = StatesNotSameConstraint([q, nsw])
+
+        c9 = StatesNotSameConstraint([v, nsw])
+
+        self.constraints = [c1, c2, c3, c4, c5, c6, c7, c8, c9]
         self.variables = [wa, nt, sa, q, nsw, v, t]
-
-
-
